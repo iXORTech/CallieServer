@@ -9,10 +9,11 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
     configureSecurity()
-    configureRouting()
     configureMonitoring()
     configureSerialization()
     configureTemplating()
     configureDatabases()
     configureSockets()
+    // Always configure routing last to make sure all plugins are ready.
+    configureRouting()
 }
