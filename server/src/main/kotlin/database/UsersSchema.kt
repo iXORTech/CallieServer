@@ -1,4 +1,4 @@
-package dev.ixor
+package dev.ixor.database
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable

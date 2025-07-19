@@ -1,10 +1,11 @@
-package dev.ixor
+package dev.ixor.pages
 
-import kotlinx.html.*
 import io.ktor.htmx.html.*
-import io.ktor.utils.io.ExperimentalKtorApi
+import io.ktor.utils.io.*
+import kotlinx.html.*
 import java.nio.file.Paths
-import kotlin.io.path.*
+import kotlin.io.path.exists
+import kotlin.io.path.useLines
 import kotlin.random.Random
 
 fun HTML.leaderboardPage(random: Random) {

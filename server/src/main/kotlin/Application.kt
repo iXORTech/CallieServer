@@ -1,5 +1,6 @@
 package dev.ixor
 
+import dev.ixor.plugins.*
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -8,10 +9,10 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
     configureSecurity()
-    configureSerialization()
+    configureRouting()
     configureMonitoring()
+    configureSerialization()
     configureTemplating()
     configureDatabases()
     configureSockets()
-    configureRouting()
 }
