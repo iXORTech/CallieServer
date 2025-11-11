@@ -6,8 +6,11 @@ In the PR, X and Y is done to achieve Z.
 
 ## Relate Issue(s)
 <!-- Replace "XXX" with the relevant GH Issue number -->
-<!-- If this PR is not related to an issue, replace the entire line with "N/A" -->
-This PR is related to #XXX.
+<!-- If this PR is not related to an issue, replace the entire list with "N/A" -->
+This PR is related to:
+
+- #XXX
+- #XXX
 <!-- You can also use one of the GitHub keywords:
 https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests -->
 
