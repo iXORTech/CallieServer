@@ -53,3 +53,35 @@ The session token generation and user login process follows the steps described 
 
 3. If the credentials are valid, the server generates a session token and returns it in the response (with a client token, if the user was password authenticated, the client token should be generated from some combination of username, hashed password and Machine ID, or, if the user was client token authenticated, the client token is returned as-is). Otherwise, the server *should* always go back to step no.1 and require a password authentication from that MachineID/IP.
 4. The client application stores the session token and uses it to authenticate subsequent WebSocket connections.
+
+### 2. Real-time Messaging
+
+The core feature of Callie is real-time messaging between users. This is implemented using WebSockets, allowing for low-latency, bidirectional communication between the client and server.
+
+When a client connects to the WebSocket endpoint, it must first authenticate using the session token obtained during the login process. Once authenticated, the client can send and receive messages in real-time.
+
+In the Callie system, messages that are transmitted between clients and/or server is structured in a JSON format, with the following fields:
+
+- `token`: The session token of the client sending the message. This is used to identify the sender.
+- `sender`: The username of the sender.
+- `receiver`: The username of the receiver. This can be a specific user or a special value (e.g., `"SERVER"`) indicating that the message is intended for the server.
+- `type`: The type of the message. This can be one of the following:
+  - `MSG`: A standard chat message between users.
+    - Markdown is supported in the message content, including code blocks, links, images, etc. Each client is responsible for rendering the markdown content appropriately.
+    - The server should perform basic sanitization on the markdown content to prevent XSS attacks, but clients should also implement their own sanitization as needed.
+    - If some images and files are embedded in the markdown content and it not accessible via public URLs yet, another mechanism should be used to upload these files/images to the server first, and then the server will provide public URLs for these resources, which can then be embedded in the markdown content.
+  - `SYSTEM`: A system message (e.g., notifications, alerts).
+  - `COMMAND`: A command message (e.g., user commands managing their account or settings).
+  - `ERROR`: An error message (e.g., invalid commands, authentication errors).
+  - `PING`: A ping message to check the connection status.
+  - `PONG`: A pong message in response to a ping message.
+  - Note that a client is NEVER supposed to send `SYSTEM` or `ERROR` messages; these types are reserved for server-to-client messages only.
+- `content`: The content of the message. The details are described in the sections below according to the message type.
+- `timestamp`: The timestamp when the message was sent, in ISO 8601 format (`YYYY-MM-DDTHH:mm.ss.sssZ`).
+  - All timestamps must be in UTC.
+  - Note that this timestamp must be accurate to the millisecond level, as it is used for ordering messages.
+  - The client is responsible for generating this timestamp when sending a message.
+  - The server will validate the timestamp and may reject messages with invalid timestamps using the following rules:
+    - The timestamp must not be more than 5 minutes in the future compared to the server's current time.
+    - The timestamp must not be more than 1 hour in the past compared to the server's current time.
+    - If the timestamp is invalid, the server will respond with an `ERROR` message indicating the reason for rejection.
